@@ -25,5 +25,8 @@ jobs:
         cd boost_1_85_0
         "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         .\bootstrap.bat
+        ECHO "---"
         DIR
+        ECHO "---"
         .\tools\build\src\engine\b2.exe --help
+        ECHO "---"
