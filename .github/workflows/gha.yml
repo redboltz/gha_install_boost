@@ -15,31 +15,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: install boost
-      if: steps.cache-boost.outputs.cache-hit != 'true'
       shell: powershell
       run: |
         $ErrorActionPreference = 'Stop'
+        pwd
         $Url = "https://boostorg.jfrog.io/artifactory/main/release/1.85.0/source/boost_1_85_0.7z"
          (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost_1_85_0.7z")
         7z.exe x "$env:TEMP\boost_1_85_0.7z"
         cd boost_1_85_0
-        ECHO "---"
-        DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\"
-        ECHO "---"
-        DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\"
-        ECHO "---"
-        DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary"
-        ECHO "---"
-        DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        ECHO "---"
         "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         .\bootstrap.bat
         DIR
         .\b2.exe --help
-#        New-Item -ItemType Directory -Force -Path D:\a\gha_install_boost\gha_install_boost\boost
-#        Start-Process -FilePath .\b2.exe -ArgumentList "toolset=msvc link=static,shared address-model=64 -j2 --prefix=D:\a\gha_install_boost\gha_install_boost\boost install --with-container --with-filesystem --with-log --with-program_options --with-system --with-test" -NoNewWindow -Wait -RedirectStandardOutput D:\a\gha_install_boost\gha_install_boost\boost\boost_build_log.txt
-#        .\b2.exe toolset=msvc link=static,shared address-model=64 -j2 --prefix=D:\a\gha_install_boost\gha_install_boost\boost install --with-container --with-filesystem --with-log --with-program_options --with-system --with-test > D:\a\gha_install_boost\gha_install_boost\boost\boost_build_log.txt
-    - name: Output Boost Build Log
-      if: always()
-      shell: bash
-      run: cat D:\a\gha_install_boost\gha_install_boost\boost\boost_build_log.txt
