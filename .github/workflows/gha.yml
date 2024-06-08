@@ -23,8 +23,17 @@ jobs:
          (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost_1_85_0.7z")
         7z.exe x "$env:TEMP\boost_1_85_0.7z"
         cd boost_1_85_0
+        ECHO "---"
+        DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\"
+        ECHO "---"
+        DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxliary"
+        ECHO "---"
+        DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxliary\Build"
+        ECHO "---"
         DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\"
+        ECHO "---"
         "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
+        ECHO "---"
         .\bootstrap.bat
         DIR
         .\b2.exe --help
