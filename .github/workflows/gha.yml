@@ -32,5 +32,5 @@ jobs:
         ECHO "---"
         dir
         ECHO "---"
-        Start-Process -FilePath "D:\a\gha_install_boost\gha_install_boost\boost_1_85_0\b2.exe --help"
+        & ".\b2.exe" --help
         ECHO "---"
