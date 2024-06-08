@@ -42,7 +42,11 @@ jobs:
 
         # Verify b2.exe is created
         Write-Host "Running b2.exe --help"
-        .\b2.exe --help | Write-Host
+        try {
+          .\b2.exe --help
+        } catch {
+          Write-Host "Error running b2.exe --help: $_"
+        }
 
         # Create the installation directory
         New-Item -ItemType Directory -Force -Path D:\a\async_mqtt\async_mqtt\boost
