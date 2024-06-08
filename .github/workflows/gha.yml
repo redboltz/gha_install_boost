@@ -26,6 +26,8 @@ jobs:
         ECHO "---"
         DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\"
         ECHO "---"
+        DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\"
+        ECHO "---"
         DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxliary"
         ECHO "---"
         DIR "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxliary\Build"
