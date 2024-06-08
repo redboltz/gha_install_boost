@@ -5,36 +5,24 @@ on:
     types: [opened, synchronize]
   push:
     branches:
-      - main
+    - main
     tags:
-      - '*'
-
+    - '*'
 jobs:
   windows:
     runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
-    - name: Install Boost
+    - name: install boost
       shell: powershell
       run: |
         $ErrorActionPreference = 'Stop'
-
-        # Display the current working directory
-        Write-Host "Current Directory:"
-        Get-Location
-
-        # Download Boost
+        pwd
         $Url = "https://boostorg.jfrog.io/artifactory/main/release/1.85.0/source/boost_1_85_0.7z"
-        (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost_1_85_0.7z")
-
-        # Extract the archive
-        & "C:\Program Files\7-Zip\7z.exe" x "$env:TEMP\boost_1_85_0.7z" -o"$env:TEMP"
-
-        # Change to the Boost directory
-        cd "$env:TEMP\boost_1_85_0"
-
+         (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost_1_85_0.7z")
+        7z.exe x "$env:TEMP\boost_1_85_0.7z"
+        cd boost_1_85_0
         # Initialize the Visual Studio environment for building
         & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
 
