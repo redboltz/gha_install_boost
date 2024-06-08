@@ -5,33 +5,65 @@ on:
     types: [opened, synchronize]
   push:
     branches:
-    - main
+      - main
     tags:
-    - '*'
+      - '*'
+
 jobs:
   windows:
     runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: install boost
+
+    - name: Install Boost
       shell: powershell
       run: |
         $ErrorActionPreference = 'Stop'
-        pwd
+
+        # Display the current working directory
+        Write-Host "Current Directory:"
+        Get-Location
+
+        # Download Boost
         $Url = "https://boostorg.jfrog.io/artifactory/main/release/1.85.0/source/boost_1_85_0.7z"
-         (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost_1_85_0.7z")
-        7z.exe x "$env:TEMP\boost_1_85_0.7z"
-        cd boost_1_85_0
-        # ECHO "---"
-        # & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
-        ECHO "---"
-        .\bootstrap.bat
-        ECHO "---"
-        pwd
-        ECHO "---"
-        dir
-        ECHO "---"
-        pwd
-        .\b2.exe --help
-        ECHO "---"
+        (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost_1_85_0.7z")
+
+        # Extract the archive
+        & "C:\Program Files\7-Zip\7z.exe" x "$env:TEMP\boost_1_85_0.7z" -o"$env:TEMP"
+
+        # Change to the Boost directory
+        cd "$env:TEMP\boost_1_85_0"
+
+        # Initialize the Visual Studio environment for building
+        & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
+
+        # Display environment variables
+        Write-Host "Environment Variables:"
+        gci env:* | sort-object name
+
+        # Build the Boost.Build engine
+        Write-Host "Running bootstrap.bat"
+        .\bootstrap.bat | Write-Host
+
+        # Display the current working directory and contents
+        Write-Host "Current Directory:"
+        Get-Location
+        Write-Host "Directory Contents:"
+        Get-ChildItem
+
+        # Verify b2.exe is created
+        Write-Host "Running b2.exe --help"
+        .\b2.exe --help | Write-Host
+
+        # Create the installation directory
+        New-Item -ItemType Directory -Force -Path D:\a\async_mqtt\async_mqtt\boost
+
+        # Build and install Boost with logging
+        Write-Host "Running b2.exe to build and install Boost"
+        .\b2.exe toolset=msvc link=static,shared address-model=64 -j2 --prefix=D:\a\async_mqtt\async_mqtt\boost install --with-container --with-filesystem --with-log --with-program_options --with-system --with-test > D:\a\async_mqtt\async_mqtt\boost\boost_build_log.txt 2>&1
+
+    - name: Output Boost Build Log
+      if: always()
+      shell: bash
+      run: cat D:\a\async_mqtt\async_mqtt\boost\boost_build_log.txt
